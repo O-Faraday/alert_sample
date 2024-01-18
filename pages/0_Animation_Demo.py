@@ -9,7 +9,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-# Charger les paramètres 
+# 1- Charger les paramètres 
 data_dir = "data"
 # Ouvrir le fichier params.txt en mode lecture
 with open(f"{data_dir}/Parameter_Datatype.txt", 'r') as file:
@@ -22,6 +22,7 @@ header = lines.pop(0)
 # Recuperation des paramètres
 l_params = [line.strip().split('\t')[0] for line in lines]
 l_types = [line.strip().split('\t')[1] for line in lines]
+
 
 
 file_param_path = 'data/Parameter_Datatype.txt'
