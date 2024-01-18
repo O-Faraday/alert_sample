@@ -1,84 +1,63 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 27 09:40:29 2023
 
-from typing import Any
-
-import numpy as np
+@author: frup87122
+"""
 
 import streamlit as st
-from streamlit.hello.utils import show_code
+import pandas as pd
+import altair as alt
+
+# Charger les paramètres 
+data_dir = "data"
+# Ouvrir le fichier params.txt en mode lecture
+with open(f"{data_dir}/Parameter_Datatype.txt", 'r') as file:
+    # Lire toutes les lignes du fichier
+    lines = file.readlines()
+
+# Supprimer la première ligne d'en-tête
+header = lines.pop(0)
+
+# Recuperation des paramètres
+l_params = [line.strip().split('\t')[0] for line in lines]
+l_types = [line.strip().split('\t')[1] for line in lines]
 
 
-def animation_demo() -> None:
-
-    # Interactive Streamlit elements, like these sliders, return their value.
-    # This gives you an extremely simple interaction model.
-    iterations = st.sidebar.slider("Level of detail", 2, 20, 10, 1)
-    separation = st.sidebar.slider("Separation", 0.7, 2.0, 0.7885)
-
-    # Non-interactive elements return a placeholder to their location
-    # in the app. Here we're storing progress_bar to update it later.
-    progress_bar = st.sidebar.progress(0)
-
-    # These two elements will be filled in later, so we create a placeholder
-    # for them using st.empty()
-    frame_text = st.sidebar.empty()
-    image = st.empty()
-
-    m, n, s = 960, 640, 400
-    x = np.linspace(-m / s, m / s, num=m).reshape((1, m))
-    y = np.linspace(-n / s, n / s, num=n).reshape((n, 1))
-
-    for frame_num, a in enumerate(np.linspace(0.0, 4 * np.pi, 100)):
-        # Here were setting value for these two elements.
-        progress_bar.progress(frame_num)
-        frame_text.text("Frame %i/100" % (frame_num + 1))
-
-        # Performing some fractal wizardry.
-        c = separation * np.exp(1j * a)
-        Z = np.tile(x, (n, 1)) + 1j * np.tile(y, (1, m))
-        C = np.full((n, m), c)
-        M: Any = np.full((n, m), True, dtype=bool)
-        N = np.zeros((n, m))
-
-        for i in range(iterations):
-            Z[M] = Z[M] * Z[M] + C[M]
-            M[np.abs(Z) > 2] = False
-            N[M] = i
-
-        # Update the image placeholder by calling the image() function on it.
-        image.image(1.0 - (N / N.max()), use_column_width=True)
-
-    # We clear elements by calling empty on them.
-    progress_bar.empty()
-    frame_text.empty()
-
-    # Streamlit widgets automatically run the script from top to bottom. Since
-    # this button is not connected to any other logic, it just causes a plain
-    # rerun.
-    st.button("Re-run")
+file_param_path = 'data/Parameter_Datatype.txt'
+data = pd.read_csv(file_path, index_col="Unnamed: 0")
+data["indice"] =data.index
 
 
-st.set_page_config(page_title="Animation Demo", page_icon="📹")
-st.markdown("# Animation Demo")
-st.sidebar.header("Animation Demo")
-st.write(
-    """This app shows how you can use Streamlit to build cool animations.
-It displays an animated fractal based on the the Julia Set. Use the slider
-to tune different parameters."""
-)
+# Convertir les colonnes spécifiées en entiers
+data = data.replace(',', '.', regex=True)
+data = data.rename(columns=lambda x: x.split(' [')[0])
 
-animation_demo()
+# Sidebar
+st.sidebar.title("Paramètres du graphe")
+feature_col = st.sidebar.selectbox("Abscisse :", data.columns)
+target_col = st.sidebar.selectbox("Ordonnée :", data.columns)
+color_col = st.sidebar.selectbox("Couleur :", data.columns)
 
-show_code(animation_demo)
+# Personnaliser les bulles d'informations
+hover_cols = st.sidebar.multiselect("Choisir les colonnes pour les bulles d'infos :", data.columns)
+hover_cols = [feature_col, target_col, color_col] + hover_cols  
+
+# Afficher le DataFrame dans la page centrale
+st.title("DataFrame")
+st.write(data)
+
+# Créer un scatter plot avec Altair
+st.title("Representation des jeux de train et de test")
+
+# Votre code Altair pour le graphique de dispersion
+scatter_chart = alt.Chart(data).mark_circle().encode(
+    x=alt.X(feature_col),  # Fixer l'origine en bas à gauche
+    y=alt.Y(target_col),  # Fixer l'origine en bas à gauche
+    color=color_col,
+    tooltip=list(hover_cols)
+).interactive()
+
+
+# Afficher le plot dans la page centrale
+selected_point = st.altair_chart(scatter_chart, use_container_width=True)
