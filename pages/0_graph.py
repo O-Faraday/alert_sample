@@ -87,7 +87,7 @@ def create_array_and_add_gaussian():
 
 # Initialiser le DataFrame
 
-df = create_initial_df(time_intervall)
+df = create_initial_df()
 
 # Titre de l'application Streamlit
 st.title("Visualisation en temps réel des données")
