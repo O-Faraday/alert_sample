@@ -63,7 +63,7 @@ while True:
     axs[0].set_title("Distribution des valeurs pour le dernier enregistrement")
     axs[0].set_xlabel("Valeur")
     axs[0].set_ylabel("Fréquence")
-    axs[0].axvline(x=seuil, color='red', linestyle='--', linewidth=2, label=f'Valeur sélectionnée {selected_value}')
+    axs[0].axvline(x=seuil, color='red', linestyle='--', linewidth=2, label=f'Valeur sélectionnée {seuil}')
     axs[0].legend()
 
     # Afficher l'image à côté de l'histogramme
