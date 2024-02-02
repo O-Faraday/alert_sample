@@ -36,6 +36,9 @@ st.title("Visualisation en temps réel des données")
 # Créer un placeholder pour l'histogramme
 placeholder = st.empty()
 
+# Créer un curseur dans la sidebar pour sélectionner une valeur entre 0 et 255
+seuil = st.sidebar.slider("Sélectionnez une valeur", 0, 255, 200)  # Défaut à 128
+
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
     # Fermer toutes les figures ouvertes avant de créer une nouvelle figure
@@ -53,6 +56,12 @@ while True:
     ax.set_title("Distribution des valeurs pour le dernier enregistrement")
     ax.set_xlabel("Valeur")
     ax.set_ylabel("Fréquence")
+    
+    # Ajouter une ligne verticale en pointillés à la valeur 128
+    ax.axvline(x=seuil, color='red', linestyle='--', linewidth=2, label='Valeur fixe 128')
+
+    # Ajouter une légende pour expliciter ce que représente la ligne
+    ax.legend()
     
     # Afficher l'histogramme dans Streamlit
     placeholder.pyplot(fig)
