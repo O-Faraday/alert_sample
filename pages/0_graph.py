@@ -115,7 +115,7 @@ while True:
     windowed_data = df.iloc[-sliding_window//time_intervall:]
     st.write("windowed_data")
     st.write(windowed_data)
-    count_above_threshold = (windowed_data.values > seuil).sum()
+    count_above_threshold = (windowed_data.values > seuil).count()
     st.write("count_above_threshold")
     st.write(count_above_threshold)
     alert_indicator = 1 if count_above_threshold > alert_threshold else 0
