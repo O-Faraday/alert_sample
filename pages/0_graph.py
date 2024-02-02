@@ -161,7 +161,7 @@ while True:
     # Affichage du graphique d'alerte
     fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(alert_df['Date'], alert_df['Alert'], marker='o', linestyle='-', color='red')
-    ax.set_title("Indicateur d'alerte au fil du temps")
+    ax.set_title("Evolution de l'indicateur d'alerte")
     ax.set_xlabel("Temps")
     ax.set_ylabel("Alerte")
     ax.set_ylim(-0.1, 1.1)
