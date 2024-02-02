@@ -176,7 +176,7 @@ while True:
     alert_placeholder.pyplot(fig)
 
     # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(time_intervall)
+    time.sleep(TIME_INTERVAL)
     
     # Nettoyage pour éviter la surcharge de la page
     #placeholder.empty()
