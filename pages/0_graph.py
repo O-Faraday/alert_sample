@@ -43,7 +43,7 @@ while True:
     
     # Créer l'histogramme avec Matplotlib
     fig, ax = plt.subplots()
-    ax.hist(last_row, bins=range(256), color='blue', alpha=0.7)
+    ax.hist(last_row, bins=32, color='blue', alpha=0.7)
     ax.set_title("Distribution des valeurs pour le dernier enregistrement")
     ax.set_xlabel("Valeur")
     ax.set_ylabel("Fréquence")
