@@ -146,14 +146,21 @@ while True:
     placeholder.pyplot(fig)
 
     # Affichage du graphique d'alerte
+    # Création du graphique
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(alert_df['Date'], alert_df['Alert'], marker='o', linestyle='-', color='red')
+    # Utiliser bar pour les diagrammes en barres
+    ax.bar(dates, alerts, width=0.02, color='red')  # Ajustez la largeur selon la densité des données
+
     ax.set_title("Indicateur d'alerte au fil du temps")
     ax.set_xlabel("Temps")
     ax.set_ylabel("Alerte")
-    ax.set_ylim(-0.1, 1.1)
-    alert_placeholder.pyplot(fig)
+    ax.set_ylim(-0.1, 1.1)  # Garder la même échelle pour clarté
 
+    # Pour améliorer la lisibilité des dates sur l'axe des x
+    fig.autofmt_xdate()
+
+    # Afficher le graphique dans le placeholder Streamlit
+    alert_placeholder.pyplot(fig)
 
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(5)
