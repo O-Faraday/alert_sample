@@ -4,41 +4,54 @@ Created on Wed Dec 27 09:40:29 2023
 
 @author: frup87122
 """
-
 import streamlit as st
 import pandas as pd
-import altair as alt
+import numpy as np
+import time
+import matplotlib.pyplot as plt
 
-# 1- Charger les paramètres 
-data_dir = "data"
-# Ouvrir le fichier params.txt en mode lecture
-with open(f"{data_dir}/Parameter_Datatype.txt", 'r') as file:
-    # Lire toutes les lignes du fichier
-    lines = file.readlines()
+# Fonction pour créer un DataFrame initial
+def create_initial_df():
+    # Créer une colonne de dates
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='S')
+    # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
+    data = np.random.randint(0, 256, size=(10, 256))
+    df = pd.DataFrame(data, index=dates)
+    return df
 
-# Supprimer la première ligne d'en-tête
-header = lines.pop(0)
+# Fonction pour ajouter un nouvel enregistrement au DataFrame
+def add_new_record(df):
+    # Ajouter un nouvel enregistrement avec la date actuelle
+    new_row = pd.Series(np.random.randint(0, 256, size=256), name=pd.Timestamp.now())
+    df = df.append(new_row)
+    return df
 
-# Recuperation des paramètres
-l_params = [line.strip().split('\t')[0] for line in lines]
-l_types = [line.strip().split('\t')[1] for line in lines]
+# Initialiser le DataFrame
+df = create_initial_df()
 
-# On garde que les floats pour commencer
-keep_types = ['float']
-l_keep_params = [p  for p, t in zip(l_params, l_types) if t in keep_types]
+# Titre de l'application Streamlit
+st.title("Visualisation en temps réel des données")
 
-# 
-# 2- Selection des paramètres que l'on souhaite afficher
-selected_params = st.sidebar.multiselect("Choisir les paramètres à affichers :", l_keep_params)
-
-# 3- Affichage des paramètres au cours du temps
-for param in selected_params :
-    file_path = 'f"{data_dir}/csv/{param}.csv.zip'
-    data = pd.read_csv(file_path, index_col="Unnamed: 0")
-    data["indice"] =data.index
-    # Afficher le DataFrame dans la page centrale
-    st.title("DataFrame")
-    st.write(data)
-
-
-
+# Boucle pour mettre à jour le DataFrame et l'affichage
+while True:
+    # Ajouter un nouvel enregistrement au DataFrame
+    df = add_new_record(df)
+    
+    # Sélectionner la dernière ligne du DataFrame pour l'histogramme
+    last_row = df.iloc[-1]
+    
+    # Créer l'histogramme avec Matplotlib
+    fig, ax = plt.subplots()
+    ax.hist(last_row, bins=range(256), color='blue', alpha=0.7)
+    ax.set_title("Distribution des valeurs pour le dernier enregistrement")
+    ax.set_xlabel("Valeur")
+    ax.set_ylabel("Fréquence")
+    
+    # Afficher l'histogramme dans Streamlit
+    st.pyplot(fig)
+    
+    # Attendre une seconde avant la prochaine mise à jour
+    time.sleep(1)
+    
+    # Effacer les anciens graphiques pour ne pas surcharger la page
+    st.empty()
