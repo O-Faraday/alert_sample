@@ -48,7 +48,7 @@ while True:
     df = add_new_record(df)
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
-    last_row = df.iloc[-1]
+    last_row = df.iloc[-1].values
     
     # Préparer les données pour l'image
     data_for_image = last_row.reshape((16, 16))
