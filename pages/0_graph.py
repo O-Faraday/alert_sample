@@ -62,8 +62,8 @@ def add_gaussian_to_array(center, length, width, array):
     x_grid, y_grid = np.meshgrid(x, y)
 
     # Calculer la gaussienne
-    sigma_x = length / 2
-    sigma_y = width / 2
+    sigma_x = length 
+    sigma_y = width 
     gauss = height * np.exp(-(((x_grid - center[0])**2 / (2 * sigma_x**2)) + ((y_grid - center[1])**2 / (2 * sigma_y**2))))
 
     # Convertir les valeurs de la gaussienne en entiers
@@ -113,13 +113,19 @@ while True:
     # Calculer l'alerte sur la fenêtre glissante
     windowed_data = df.iloc[-sliding_window:]
     count_above_threshold = (windowed_data > seuil).sum(axis=1)
+    st.write("count_above_threshold")
+    st.write(count_above_threshold)
     alert_indicator = 1 if any(count_above_threshold > alert_threshold) else 0
     new_alert = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Alert': [alert_indicator]})
+    st.write("new_alert")
+    st.write(new_alert)
     alert_df = pd.concat([alert_df, new_alert])
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
-
+    count_threshold = (last_row > seuil).sum(axis=1)
+    st.write("coun_threshold")
+    st.write(count_threshold)
     
     # Préparer les données pour l'image
     data_for_image = last_row.reshape((16, 16))
