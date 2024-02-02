@@ -124,8 +124,6 @@ while True:
        alert_df = new_alert.copy()
     else :
        alert_df = pd.concat([alert_df, new_alert])
-    st.write("alert_df")
-    st.write(alert_df)
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
