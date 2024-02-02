@@ -15,44 +15,42 @@ def create_initial_df():
     # Créer une colonne de dates
     dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='2s')
     # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
-    data = np.random.randint(0, 256, size=(10, 256))
+    data = np.vstack([create_array_and_add_gaussian().reshape(1,256) for i in range(10)])
     df = pd.DataFrame(data, index=dates)
     return df
     
 # Fonction pour ajouter un nouvel enregistrement au DataFrame
 def add_new_record(df):
     # Ajouter un nouvel enregistrement avec la date actuelle
-    new_row = pd.DataFrame(np.random.randint(0, 256, size=(1, 256)), index=[pd.Timestamp.now()])
+    new_row = pd.DataFrame(create_array_and_add_gaussian().reshape(1,256), index=[pd.Timestamp.now()])
     df = pd.concat([df, new_row])
     return df
 
-import numpy as np
+# Creation de la gaussienne superposée au tableau
+def add_gaussian_to_array(center, length, width, array):
+    height = np.random.randint(100, 201)  # Hauteur aléatoire entre 100 et 200
 
-def create_rectangle_array():
-    # Créer un tableau de 16x16 avec des valeurs constantes à 55
-    array = np.full((16, 16), 55, dtype=int)
-    
-    # Choisir un centre au hasard dans le tableau
-    center = np.random.randint(0, 16, size=2)
-    
-    # Choisir des dimensions aléatoires pour le rectangle avec largeur < 8 et longueur < 8
-    width = np.random.randint(1, 8)
-    length = np.random.randint(1, 8)
-    
-    # Calculer les coordonnées du coin supérieur gauche du rectangle
-    top_left = center - np.array([length//2, width//2])
-    
-    # Ajuster pour s'assurer que le rectangle reste dans les limites du tableau
-    top_left = np.clip(top_left, 0, 16 - np.array([length, width]))
-    
-    # Calculer les coordonnées du coin inférieur droit du rectangle
-    bottom_right = top_left + np.array([length, width])
-    
-    # Délimiter le rectangle dans le tableau (ici, vous pouvez choisir de modifier les valeurs ou de les laisser identiques)
-    # array[top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]] = # Valeur à définir si nécessaire
-    
-    return center, top_left, bottom_right, width, length
+    # Créer des grilles de coordonnées pour le tableau
+    x = np.arange(0, array.shape[0])
+    y = np.arange(0, array.shape[1])
+    x_grid, y_grid = np.meshgrid(x, y)
 
+    # Calculer la gaussienne
+    sigma_x = length / 2
+    sigma_y = width / 2
+    gauss = height * np.exp(-(((x_grid - center[0])**2 / (2 * sigma_x**2)) + ((y_grid - center[1])**2 / (2 * sigma_y**2))))
+
+    # Ajouter la gaussienne au tableau existant
+    array += gauss
+
+    return array
+
+# Fonction pour créer un tableau et ajouter une gaussienne
+def create_array_and_add_gaussian():
+    array = np.full((16, 16), 55, dtype=int)  # Tableau initial
+    center, length, width = create_rectangle_array()  # Obtenir centre, longueur, et largeur (définir cette fonction séparément)
+    array_with_gaussian = add_gaussian_to_array(center, length, width, array)  # Ajouter la gaussienne
+    return array_with_gaussian
 
 
 # Initialiser le DataFrame
