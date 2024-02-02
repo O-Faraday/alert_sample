@@ -50,25 +50,34 @@ while True:
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1]
     
-    # Créer l'histogramme avec Matplotlib
-    fig, ax = plt.subplots()
-    ax.hist(last_row, bins=20, color='blue', alpha=0.7)
-    ax.set_title("Distribution des valeurs pour le dernier enregistrement")
-    ax.set_xlabel("Valeur")
-    ax.set_ylabel("Fréquence")
-    
-    # Ajouter une ligne verticale en pointillés à la valeur 128
-    ax.axvline(x=seuil, color='red', linestyle='--', linewidth=2, label='Valeur fixe 128')
+    # Préparer les données pour l'image
+    data_for_image = last_row.reshape((16, 16))
+    image = np.zeros((16, 16, 3), dtype=np.uint8)  # Créer un tableau vide pour l'image RGB
+    image[:, :, 2] = data_for_image  # Canal bleu
+    image[:, :, 0] = 255 - data_for_image  # Canal rouge
+    # Le canal vert reste à 0
 
-    # Ajouter une légende pour expliciter ce que représente la ligne
-    ax.legend()
+    # Créer l'histogramme avec Matplotlib
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    axs[0].hist(last_row, bins=20, color='blue', alpha=0.7)
+    axs[0].set_title("Distribution des valeurs pour le dernier enregistrement")
+    axs[0].set_xlabel("Valeur")
+    axs[0].set_ylabel("Fréquence")
+    axs[0].axvline(x=selected_value, color='red', linestyle='--', linewidth=2, label=f'Valeur sélectionnée {selected_value}')
+    axs[0].legend()
+
+    # Afficher l'image à côté de l'histogramme
+    axs[1].imshow(image)
+    axs[1].set_title("Représentation en image")
+    axs[1].axis('off')  # Désactiver les axes pour l'image
+
     
     # Afficher l'histogramme dans Streamlit
     placeholder.pyplot(fig)
 
     #Décompte des valeurs au dela du seuil
     count_above = np.sum(last_row > seuil)
-    st.write(count_above)
+    #st.write(count_above)
     
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(2)
