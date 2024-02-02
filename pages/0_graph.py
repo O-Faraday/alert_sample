@@ -154,8 +154,6 @@ while True:
     ax.set_ylim(-0.1, 1.1)
     alert_placeholder.pyplot(fig)
 
-    center, top_left, bottom_right, length, width = create_rectangle_array()
-    st.write(f"Centre: {center}, Longueur: {length}, Largeur: {width}")
 
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(5)
