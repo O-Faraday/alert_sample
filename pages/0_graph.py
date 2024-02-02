@@ -116,7 +116,7 @@ while True:
     count_above_threshold = (windowed_data.values > seuil).sum()
     st.write("count_above_threshold")
     st.write(count_above_threshold)
-    alert_indicator = 1 if any(count_above_threshold > alert_threshold) else 0
+    alert_indicator = 1 if count_above_threshold > alert_threshold else 0
     new_alert = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Alert': [alert_indicator]})
     st.write("new_alert")
     st.write(new_alert)
