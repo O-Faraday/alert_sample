@@ -71,6 +71,7 @@ def add_gaussian_to_array(center, length, width, array):
 
     # Ajouter la gaussienne au tableau existant
     array += gauss_int
+    return array
 
 # Fonction pour créer un tableau et ajouter une gaussienne
 def create_array_and_add_gaussian():
