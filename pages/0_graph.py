@@ -53,8 +53,8 @@ while True:
     # Préparer les données pour l'image
     data_for_image = last_row.reshape((16, 16))
     image = np.zeros((16, 16, 3), dtype=np.uint8)  # Créer un tableau vide pour l'image RGB
-    image[:, :, 2] = data_for_image  # Canal bleu
-    image[:, :, 0] = 255 - data_for_image  # Canal rouge
+    image[:, :, 0] = data_for_image  # Canal rouge
+    image[:, :, 2] = 255 - data_for_image  # Canal bleu
     # Le canal vert reste à 0
 
     # Créer l'histogramme avec Matplotlib
