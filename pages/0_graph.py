@@ -101,6 +101,8 @@ placeholder = st.empty()
 # Créer un placeholder pour le graphique d'alerte
 alert_placeholder = st.empty()
 
+comment_placeholder = st.empty()
+
 # Paramètres de la sidebar
 seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 200
 sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*TIME_INTERVAL, 5*TIME_INTERVAL, step=TIME_INTERVAL)  # Défaut à 5
@@ -117,6 +119,7 @@ while True:
     # Calculer l'alerte sur la fenêtre glissante
     windowed_data = df.iloc[-sliding_window//TIME_INTERVAL:]
     count_above_threshold = (windowed_data.values > seuil).sum()
+    comment_placeholder.write(f"Le nombre de pixels au dessus du seuil {seuil} de température est {count_above_threshold}")
     
     alert_indicator = 1 if count_above_threshold > alert_threshold else 0
     
