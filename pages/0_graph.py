@@ -117,7 +117,7 @@ while True:
     df = add_new_record(df)
 
     # Calculer l'alerte sur la fenêtre glissante
-    windowed_data = df.iloc[-sliding_window//TIME_INTERVAL:]
+    windowed_data = df.iloc[-sliding_window:]
     count_above_threshold = (windowed_data.values > seuil).sum()
     comment_placeholder.write(f"Le nombre de pixels au dessus du seuil {seuil} de température est {count_above_threshold}")
     
