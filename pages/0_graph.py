@@ -106,7 +106,7 @@ comment_placeholder = st.empty()
 # Paramètres de la sidebar
 seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 200
 sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*TIME_INTERVAL, 5*TIME_INTERVAL, step=TIME_INTERVAL)  # Défaut à 5
-alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
+alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 10*sliding_window)  
 
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
