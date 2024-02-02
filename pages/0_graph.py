@@ -68,6 +68,7 @@ while True:
 
     #Décompte des valeurs au dela du seuil
     count_above = np.sum(last_row > seuil)
+    st.write(count_above)
     
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(2)
