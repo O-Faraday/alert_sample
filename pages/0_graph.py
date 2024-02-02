@@ -113,14 +113,17 @@ while True:
 
     # Calculer l'alerte sur la fenêtre glissante
     windowed_data = df.iloc[-sliding_window//time_intervall:]
-    count_above_threshold = (windowed_data > seuil).sum()
+    count_above_threshold = (windowed_data.values > seuil).sum()
     st.write("count_above_threshold")
     st.write(count_above_threshold)
     alert_indicator = 1 if any(count_above_threshold > alert_threshold) else 0
     new_alert = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Alert': [alert_indicator]})
     st.write("new_alert")
     st.write(new_alert)
-    alert_df = pd.concat([alert_df, new_alert])
+    if alert_df.empty:
+       alert_df = new_alert.copy()
+    else :
+       alert_df = pd.concat([alert_df, new_alert])
     st.write("alert_df")
     st.write(alert_df)
     
