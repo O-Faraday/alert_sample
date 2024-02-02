@@ -26,6 +26,34 @@ def add_new_record(df):
     df = pd.concat([df, new_row])
     return df
 
+import numpy as np
+
+def create_rectangle_array():
+    # Créer un tableau de 16x16 avec des valeurs constantes à 55
+    array = np.full((16, 16), 55, dtype=int)
+    
+    # Choisir un centre au hasard dans le tableau
+    center = np.random.randint(0, 16, size=2)
+    
+    # Choisir des dimensions aléatoires pour le rectangle avec largeur < 8 et longueur < 8
+    width = np.random.randint(1, 8)
+    length = np.random.randint(1, 8)
+    
+    # Calculer les coordonnées du coin supérieur gauche du rectangle
+    top_left = center - np.array([length//2, width//2])
+    
+    # Ajuster pour s'assurer que le rectangle reste dans les limites du tableau
+    top_left = np.clip(top_left, 0, 16 - np.array([length, width]))
+    
+    # Calculer les coordonnées du coin inférieur droit du rectangle
+    bottom_right = top_left + np.array([length, width])
+    
+    # Délimiter le rectangle dans le tableau (ici, vous pouvez choisir de modifier les valeurs ou de les laisser identiques)
+    # array[top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]] = # Valeur à définir si nécessaire
+    
+    return center, top_left, bottom_left, witdh, length
+
+
 
 # Initialiser le DataFrame
 df = create_initial_df()
@@ -99,9 +127,12 @@ while True:
     ax.set_ylabel("Alerte")
     ax.set_ylim(-0.1, 1.1)
     alert_placeholder.pyplot(fig)
-    
+
+    center, top_left, bottom_right, length, width = create_rectangle_array()
+    st.write(f"Centre: {center}, Longueur: {length}, Largeur: {width}")
+    st.write(
     # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(2)
+    time.sleep(5)
     
     # Nettoyage pour éviter la surcharge de la page
     #placeholder.empty()
