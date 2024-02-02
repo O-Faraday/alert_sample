@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # Fonction pour créer un DataFrame initial
 def create_initial_df():
     # Créer une colonne de dates
-    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='S')
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='s')
     # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
     data = np.random.randint(0, 256, size=(10, 256))
     df = pd.DataFrame(data, index=dates)
@@ -58,7 +58,7 @@ while True:
     placeholder.pyplot(fig)
     
     # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(5)
+    time.sleep(2)
     
     # Effacer les anciens graphiques pour ne pas surcharger la page
     st.empty()
