@@ -65,11 +65,12 @@ def add_gaussian_to_array(center, length, width, array):
     sigma_x = length / 2
     sigma_y = width / 2
     gauss = height * np.exp(-(((x_grid - center[0])**2 / (2 * sigma_x**2)) + ((y_grid - center[1])**2 / (2 * sigma_y**2))))
-    st.write(gauss)
-    # Ajouter la gaussienne au tableau existant
-    array += gauss
 
-    return array
+    # Convertir les valeurs de la gaussienne en entiers
+    gauss_int = np.round(gauss).astype(int)
+
+    # Ajouter la gaussienne au tableau existant
+    array += gauss_int
 
 # Fonction pour créer un tableau et ajouter une gaussienne
 def create_array_and_add_gaussian():
