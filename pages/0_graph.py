@@ -113,6 +113,8 @@ while True:
 
     # Calculer l'alerte sur la fenêtre glissante
     windowed_data = df.iloc[-sliding_window//time_intervall:]
+    st.write("windowed_data")
+    st.write(windowed_data)
     count_above_threshold = (windowed_data.values > seuil).sum()
     st.write("count_above_threshold")
     st.write(count_above_threshold)
