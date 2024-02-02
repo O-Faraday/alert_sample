@@ -11,9 +11,9 @@ import time
 import matplotlib.pyplot as plt
 
 # Fonction pour créer un DataFrame initial
-def create_initial_df():
+def create_initial_df(time_step=1):
     # Créer une colonne de dates
-    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='2s')
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq=f'{time_step}s')
     # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
     data = np.vstack([create_array_and_add_gaussian().reshape(1,256) for i in range(10)])
     df = pd.DataFrame(data, index=dates)
@@ -82,7 +82,8 @@ def create_array_and_add_gaussian():
 
 
 # Initialiser le DataFrame
-df = create_initial_df()
+time_intervall=5
+df = create_initial_df(time_intervall)
 
 # Titre de l'application Streamlit
 st.title("Visualisation en temps réel des données")
@@ -98,7 +99,7 @@ alert_placeholder = st.empty()
 
 # Paramètres de la sidebar
 seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 200
-sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 1, 20, 10)  # Défaut à 5
+sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*time_intervall, 5*time_intervall, step=time_intervall)  # Défaut à 5
 alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
 
 
@@ -111,8 +112,8 @@ while True:
     df = add_new_record(df)
 
     # Calculer l'alerte sur la fenêtre glissante
-    windowed_data = df.iloc[-sliding_window:]
-    count_above_threshold = (windowed_data > seuil).sum(axis=1)
+    windowed_data = df.iloc[-sliding_window//time_intervall:]
+    count_above_threshold = (windowed_data > seuil).sum()
     st.write("count_above_threshold")
     st.write(count_above_threshold)
     alert_indicator = 1 if any(count_above_threshold > alert_threshold) else 0
@@ -169,7 +170,7 @@ while True:
     alert_placeholder.pyplot(fig)
 
     # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(5)
+    time.sleep(time_intervall)
     
     # Nettoyage pour éviter la surcharge de la page
     #placeholder.empty()
