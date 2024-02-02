@@ -64,7 +64,7 @@ def add_gaussian_to_array(center, length, width, array):
     # Calculer la gaussienne
     sigma_x = length / 2
     sigma_y = width / 2
-    gauss = height * np.exp(-(((x_grid - center[0])**2 / (2 * sigma_x**2)) + ((y_grid - center[1])**2 / (2 * sigma_y**2))))
+    gauss = int(height * np.exp(-(((x_grid - center[0])**2 / (2 * sigma_x**2)) + ((y_grid - center[1])**2 / (2 * sigma_y**2)))))
 
     # Ajouter la gaussienne au tableau existant
     array += gauss
