@@ -149,7 +149,7 @@ while True:
     # Création du graphique
     fig, ax = plt.subplots(figsize=(10, 4))
     # Utiliser bar pour les diagrammes en barres
-    ax.bar(dates, alerts, width=0.02, color='red')  # Ajustez la largeur selon la densité des données
+    ax.bar(alert_df['Date'], alert_df["alert"], width=0.02, color='red')  # Ajustez la largeur selon la densité des données
 
     ax.set_title("Indicateur d'alerte au fil du temps")
     ax.set_xlabel("Temps")
