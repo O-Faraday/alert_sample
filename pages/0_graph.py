@@ -38,6 +38,9 @@ placeholder = st.empty()
 
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
+    # Fermer toutes les figures ouvertes avant de créer une nouvelle figure
+    plt.close('all')  # Ajoutez cette ligne pour s'assurer que toutes les figures précédentes sont fermées
+
     # Ajouter un nouvel enregistrement au DataFrame
     df = add_new_record(df)
     
