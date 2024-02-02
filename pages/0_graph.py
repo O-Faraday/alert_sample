@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # Fonction pour créer un DataFrame initial
 def create_initial_df():
     # Créer une colonne de dates
-    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='s')
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq='2s')
     # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
     data = np.random.randint(0, 256, size=(10, 256))
     df = pd.DataFrame(data, index=dates)
@@ -37,7 +37,7 @@ st.title("Visualisation en temps réel des données")
 placeholder = st.empty()
 
 # Créer un curseur dans la sidebar pour sélectionner une valeur entre 0 et 255
-seuil = st.sidebar.slider("Sélectionnez une valeur", 0, 255, 200)  # Défaut à 128
+seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 128
 
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
@@ -65,6 +65,9 @@ while True:
     
     # Afficher l'histogramme dans Streamlit
     placeholder.pyplot(fig)
+
+    #Décompte des valeurs au dela du seuil
+    count_above = np.sum(last_row > seuil)
     
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(2)
