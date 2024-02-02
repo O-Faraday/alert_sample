@@ -33,11 +33,20 @@ df = create_initial_df()
 # Titre de l'application Streamlit
 st.title("Visualisation en temps réel des données")
 
+# DataFrame pour stocker les indicateurs d'alerte
+alert_df = pd.DataFrame(columns=['Date', 'Alert'])
+
 # Créer un placeholder pour l'histogramme
 placeholder = st.empty()
 
-# Créer un curseur dans la sidebar pour sélectionner une valeur entre 0 et 255
-seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 128
+# Créer un placeholder pour le graphique d'alerte
+alert_placeholder = st.empty()
+
+# Paramètres de la sidebar
+seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 128)  # Défaut à 128
+sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 1, 20, 5)  # Défaut à 5
+alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 1, 256, 50)  # Défaut à 50
+
 
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
@@ -46,9 +55,17 @@ while True:
 
     # Ajouter un nouvel enregistrement au DataFrame
     df = add_new_record(df)
+
+    # Calculer l'alerte sur la fenêtre glissante
+    windowed_data = df.iloc[-sliding_window:]
+    count_above_threshold = (windowed_data > seuil).sum(axis=1)
+    alert_indicator = 1 if any(count_above_threshold > alert_threshold) else 0
+    new_alert = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Alert': [alert_indicator]})
+    alert_df = pd.concat([alert_df, new_alert])
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
+
     
     # Préparer les données pour l'image
     data_for_image = last_row.reshape((16, 16))
@@ -70,17 +87,22 @@ while True:
     axs[1].imshow(image)
     axs[1].set_title("Représentation en image")
     axs[1].axis('off')  # Désactiver les axes pour l'image
-
     
     # Afficher l'histogramme dans Streamlit
     placeholder.pyplot(fig)
 
-    #Décompte des valeurs au dela du seuil
-    count_above = np.sum(last_row > seuil)
-    #st.write(count_above)
+    # Affichage du graphique d'alerte
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.plot(alert_df['Date'], alert_df['Alert'], marker='o', linestyle='-', color='red')
+    ax.set_title("Indicateur d'alerte au fil du temps")
+    ax.set_xlabel("Temps")
+    ax.set_ylabel("Alerte")
+    ax.set_ylim(-0.1, 1.1)
+    alert_placeholder.pyplot(fig)
     
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(2)
     
-    # Effacer les anciens graphiques pour ne pas surcharger la page
-    st.empty()
+    # Nettoyage pour éviter la surcharge de la page
+    placeholder.empty()
+    alert_placeholder.empty()
