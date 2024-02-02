@@ -104,5 +104,5 @@ while True:
     time.sleep(2)
     
     # Nettoyage pour éviter la surcharge de la page
-    placeholder.empty()
-    alert_placeholder.empty()
+    #placeholder.empty()
+    #alert_placeholder.empty()
