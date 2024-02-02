@@ -10,6 +10,10 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 
+#Constante de paramètrage
+IMG_SIZE = 8
+time_intervall=2
+
 # Fonction pour créer un DataFrame initial
 def create_initial_df(time_step=1):
     # Créer une colonne de dates
@@ -82,7 +86,7 @@ def create_array_and_add_gaussian():
 
 
 # Initialiser le DataFrame
-time_intervall=2
+
 df = create_initial_df(time_intervall)
 
 # Titre de l'application Streamlit
