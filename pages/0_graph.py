@@ -82,7 +82,7 @@ def create_array_and_add_gaussian():
 
 
 # Initialiser le DataFrame
-time_intervall=5
+time_intervall=2
 df = create_initial_df(time_intervall)
 
 # Titre de l'application Streamlit
@@ -102,12 +102,12 @@ seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)
 sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*time_intervall, 5*time_intervall, step=time_intervall)  # Défaut à 5
 alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
 
-
+compteur = 0
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
     # Fermer toutes les figures ouvertes avant de créer une nouvelle figure
     plt.close('all')  # Ajoutez cette ligne pour s'assurer que toutes les figures précédentes sont fermées
-
+    st.write("compteur : {compteur}")
     # Ajouter un nouvel enregistrement au DataFrame
     df = add_new_record(df)
 
@@ -121,11 +121,13 @@ while True:
     st.write("new_alert")
     st.write(new_alert)
     alert_df = pd.concat([alert_df, new_alert])
+    st.write("alert_df")
+    st.write(alert_df)
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
     count_threshold = (last_row > seuil).sum()
-    st.write("coun_threshold")
+    st.write("count_threshold")
     st.write(count_threshold)
     
     # Préparer les données pour l'image
