@@ -11,7 +11,7 @@ import time
 import matplotlib.pyplot as plt
 
 #Constante de paramètrage
-IMG_SIZE = 8
+IMG_SIZE = 16
 TIME_INTERVAL = 2
 
 # Fonction pour créer un DataFrame initial
@@ -106,26 +106,22 @@ seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)
 sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*TIME_INTERVAL, 5*TIME_INTERVAL, step=TIME_INTERVAL)  # Défaut à 5
 alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
 
-compteur = 0
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
     # Fermer toutes les figures ouvertes avant de créer une nouvelle figure
     plt.close('all')  # Ajoutez cette ligne pour s'assurer que toutes les figures précédentes sont fermées
-    st.write(f"compteur : {compteur}")
+    
     # Ajouter un nouvel enregistrement au DataFrame
     df = add_new_record(df)
 
     # Calculer l'alerte sur la fenêtre glissante
     windowed_data = df.iloc[-sliding_window//TIME_INTERVAL:]
-    st.write("windowed_data")
-    st.write((windowed_data.values > seuil))
     count_above_threshold = (windowed_data.values > seuil).sum()
-    st.write("count_above_threshold")
-    st.write(count_above_threshold)
+    
     alert_indicator = 1 if count_above_threshold > alert_threshold else 0
+    
     new_alert = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Alert': [alert_indicator]})
-    st.write("new_alert")
-    st.write(new_alert)
+    
     if alert_df.empty:
        alert_df = new_alert.copy()
     else :
@@ -134,8 +130,6 @@ while True:
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
     count_threshold = (last_row > seuil).sum()
-    st.write("count_threshold")
-    st.write(count_threshold)
     
     # Préparer les données pour l'image
     data_for_image = last_row.reshape((IMG_SIZE, IMG_SIZE))
