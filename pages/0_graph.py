@@ -12,41 +12,41 @@ import matplotlib.pyplot as plt
 
 #Constante de paramètrage
 IMG_SIZE = 8
-time_intervall=2
+TIME_INTERVAL = 2
 
 # Fonction pour créer un DataFrame initial
-def create_initial_df(time_step=1):
+def create_initial_df():
     # Créer une colonne de dates
-    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq=f'{time_step}s')
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=10, freq=f'{TIME_INTERVAL}s')
     # Générer des valeurs aléatoires entre 0 et 255 pour les 256 colonnes
-    data = np.vstack([create_array_and_add_gaussian().reshape(1,256) for i in range(10)])
+    data = np.vstack([create_array_and_add_gaussian().reshape(1,IMG_SIZE*IMG_SIZE) for i in range(10)])
     df = pd.DataFrame(data, index=dates)
     return df
     
 # Fonction pour ajouter un nouvel enregistrement au DataFrame
 def add_new_record(df):
     # Ajouter un nouvel enregistrement avec la date actuelle
-    new_row = pd.DataFrame(create_array_and_add_gaussian().reshape(1,256), index=[pd.Timestamp.now()])
+    new_row = pd.DataFrame(create_array_and_add_gaussian().reshape(1,IMG_SIZE*IMG_SIZE), index=[pd.Timestamp.now()])
     df = pd.concat([df, new_row])
     return df
 
 # Creer le rectangle dans l'image
 def create_rectangle_array():
     # Créer un tableau de 16x16 avec des valeurs constantes à 55
-    array = np.full((16, 16), 55, dtype=int)
+    array = np.full((IMG_SIZE, IMG_SIZE), 55, dtype=int)
     
     # Choisir un centre au hasard dans le tableau
-    center = np.random.randint(0, 16, size=2)
+    center = np.random.randint(0, IMG_SIZE, size=2)
     
     # Choisir des dimensions aléatoires pour le rectangle avec largeur < 8 et longueur < 8
-    width = np.random.randint(1, 8)
-    length = np.random.randint(1, 8)
+    width = np.random.randint(1, IMG_SIZE//2)
+    length = np.random.randint(1, IMG_SIZE//2)
     
     # Calculer les coordonnées du coin supérieur gauche du rectangle
     top_left = center - np.array([length//2, width//2])
     
     # Ajuster pour s'assurer que le rectangle reste dans les limites du tableau
-    top_left = np.clip(top_left, 0, 16 - np.array([length, width]))
+    top_left = np.clip(top_left, 0, IMG_SIZE - np.array([length, width]))
     
     # Calculer les coordonnées du coin inférieur droit du rectangle
     bottom_right = top_left + np.array([length, width])
@@ -79,7 +79,7 @@ def add_gaussian_to_array(center, length, width, array):
 
 # Fonction pour créer un tableau et ajouter une gaussienne
 def create_array_and_add_gaussian():
-    array = np.full((16, 16), 55, dtype=int)  # Tableau initial
+    array = np.full((IMG_SIZE, IMG_SIZE), 55, dtype=int)  # Tableau initial
     center, length, width = create_rectangle_array()  # Obtenir centre, longueur, et largeur (définir cette fonction séparément)
     array_with_gaussian = add_gaussian_to_array(center, length, width, array)  # Ajouter la gaussienne
     return array_with_gaussian
@@ -103,7 +103,7 @@ alert_placeholder = st.empty()
 
 # Paramètres de la sidebar
 seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 200
-sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*time_intervall, 5*time_intervall, step=time_intervall)  # Défaut à 5
+sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 0, 10*TIME_INTERVAL, 5*TIME_INTERVAL, step=TIME_INTERVAL)  # Défaut à 5
 alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
 
 compteur = 0
@@ -116,7 +116,7 @@ while True:
     df = add_new_record(df)
 
     # Calculer l'alerte sur la fenêtre glissante
-    windowed_data = df.iloc[-sliding_window//time_intervall:]
+    windowed_data = df.iloc[-sliding_window//TIME_INTERVAL:]
     st.write("windowed_data")
     st.write((windowed_data.values > seuil))
     count_above_threshold = (windowed_data.values > seuil).sum()
@@ -138,8 +138,8 @@ while True:
     st.write(count_threshold)
     
     # Préparer les données pour l'image
-    data_for_image = last_row.reshape((16, 16))
-    image = np.zeros((16, 16, 3), dtype=np.uint8)  # Créer un tableau vide pour l'image RGB
+    data_for_image = last_row.reshape((IMG_SIZE, IMG_SIZE))
+    image = np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8)  # Créer un tableau vide pour l'image RGB
     image[:, :, 0] = data_for_image  # Canal rouge
     image[:, :, 2] = 255 - data_for_image  # Canal bleu
     # Le canal vert reste à 0
