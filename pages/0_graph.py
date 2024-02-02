@@ -123,7 +123,7 @@ while True:
     
     # Sélectionner la dernière ligne du DataFrame pour l'histogramme
     last_row = df.iloc[-1].values
-    count_threshold = (last_row > seuil).sum(axis=1)
+    count_threshold = (last_row > seuil).sum()
     st.write("coun_threshold")
     st.write(count_threshold)
     
