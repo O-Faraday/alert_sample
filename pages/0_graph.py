@@ -18,13 +18,14 @@ def create_initial_df():
     data = np.random.randint(0, 256, size=(10, 256))
     df = pd.DataFrame(data, index=dates)
     return df
-
+    
 # Fonction pour ajouter un nouvel enregistrement au DataFrame
 def add_new_record(df):
     # Ajouter un nouvel enregistrement avec la date actuelle
-    new_row = pd.Series(np.random.randint(0, 256, size=256), name=pd.Timestamp.now())
-    df = df.append(new_row)
+    new_row = pd.DataFrame(np.random.randint(0, 256, size=(1, 256)), index=[pd.Timestamp.now()])
+    df = pd.concat([df, new_row])
     return df
+
 
 # Initialiser le DataFrame
 df = create_initial_df()
