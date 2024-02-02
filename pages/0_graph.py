@@ -33,6 +33,9 @@ df = create_initial_df()
 # Titre de l'application Streamlit
 st.title("Visualisation en temps réel des données")
 
+# Créer un placeholder pour l'histogramme
+placeholder = st.empty()
+
 # Boucle pour mettre à jour le DataFrame et l'affichage
 while True:
     # Ajouter un nouvel enregistrement au DataFrame
@@ -49,7 +52,7 @@ while True:
     ax.set_ylabel("Fréquence")
     
     # Afficher l'histogramme dans Streamlit
-    st.pyplot(fig)
+    placeholder.pyplot(fig)
     
     # Attendre une seconde avant la prochaine mise à jour
     time.sleep(1)
