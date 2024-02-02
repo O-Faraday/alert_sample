@@ -46,7 +46,7 @@ while True:
     
     # Créer l'histogramme avec Matplotlib
     fig, ax = plt.subplots()
-    ax.hist(last_row, bins=32, color='blue', alpha=0.7)
+    ax.hist(last_row, bins=20, color='blue', alpha=0.7)
     ax.set_title("Distribution des valeurs pour le dernier enregistrement")
     ax.set_xlabel("Valeur")
     ax.set_ylabel("Fréquence")
@@ -55,7 +55,7 @@ while True:
     placeholder.pyplot(fig)
     
     # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(1)
+    time.sleep(5)
     
     # Effacer les anciens graphiques pour ne pas surcharger la page
     st.empty()
