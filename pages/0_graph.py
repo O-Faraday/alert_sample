@@ -107,7 +107,7 @@ compteur = 0
 while True:
     # Fermer toutes les figures ouvertes avant de créer une nouvelle figure
     plt.close('all')  # Ajoutez cette ligne pour s'assurer que toutes les figures précédentes sont fermées
-    st.write("compteur : {compteur}")
+    st.write(f"compteur : {compteur}")
     # Ajouter un nouvel enregistrement au DataFrame
     df = add_new_record(df)
 
