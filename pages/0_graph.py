@@ -51,7 +51,7 @@ def create_rectangle_array():
     # Délimiter le rectangle dans le tableau (ici, vous pouvez choisir de modifier les valeurs ou de les laisser identiques)
     # array[top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]] = # Valeur à définir si nécessaire
     
-    return center, top_left, bottom_left, witdh, length
+    return center, top_left, bottom_right, witdh, length
 
 
 
