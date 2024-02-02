@@ -43,9 +43,9 @@ placeholder = st.empty()
 alert_placeholder = st.empty()
 
 # Paramètres de la sidebar
-seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 128)  # Défaut à 128
-sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 1, 20, 5)  # Défaut à 5
-alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 1, 256, 50)  # Défaut à 50
+seuil = st.sidebar.slider("Sélectionnez le seuil de température", 0, 255, 200)  # Défaut à 200
+sliding_window = st.sidebar.slider("Sélectionnez la durée de la fenêtre glissante (en enregistrements) : ", 1, 20, 10)  # Défaut à 5
+alert_threshold = st.sidebar.slider("Sélectionnez le seuil d'alerte : ", 0, 50*sliding_window, 20*sliding_window)  
 
 
 # Boucle pour mettre à jour le DataFrame et l'affichage
