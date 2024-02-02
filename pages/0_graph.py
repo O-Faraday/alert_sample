@@ -26,6 +26,32 @@ def add_new_record(df):
     df = pd.concat([df, new_row])
     return df
 
+# Creer le rectangle dans l'image
+def create_rectangle_array():
+    # Créer un tableau de 16x16 avec des valeurs constantes à 55
+    array = np.full((16, 16), 55, dtype=int)
+    
+    # Choisir un centre au hasard dans le tableau
+    center = np.random.randint(0, 16, size=2)
+    
+    # Choisir des dimensions aléatoires pour le rectangle avec largeur < 8 et longueur < 8
+    width = np.random.randint(1, 8)
+    length = np.random.randint(1, 8)
+    
+    # Calculer les coordonnées du coin supérieur gauche du rectangle
+    top_left = center - np.array([length//2, width//2])
+    
+    # Ajuster pour s'assurer que le rectangle reste dans les limites du tableau
+    top_left = np.clip(top_left, 0, 16 - np.array([length, width]))
+    
+    # Calculer les coordonnées du coin inférieur droit du rectangle
+    bottom_right = top_left + np.array([length, width])
+    
+    # Délimiter le rectangle dans le tableau (ici, vous pouvez choisir de modifier les valeurs ou de les laisser identiques)
+    # array[top_left[0]:bottom_right[0], top_left[1]:bottom_right[1]] = # Valeur à définir si nécessaire
+    
+    return center, length, width
+    
 # Creation de la gaussienne superposée au tableau
 def add_gaussian_to_array(center, length, width, array):
     height = np.random.randint(100, 201)  # Hauteur aléatoire entre 100 et 200
