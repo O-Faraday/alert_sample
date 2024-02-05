@@ -8,7 +8,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
+import os
 import matplotlib.pyplot as plt
+
+csv_file_path = 'alert.csv'
 
 #Constante de paramètrage
 IMG_SIZE = 16
@@ -95,6 +98,9 @@ st.title("Visualisation en temps réel des données")
 # DataFrame pour stocker les indicateurs d'alerte
 alert_df = pd.DataFrame(columns=['Date', 'Alert'])
 
+# DataFrame pour stocker les choix de l'utilisateur
+user_alert_df = pd.DataFrame(columns=['Date', 'Température', 'Alerte'])
+
 # Créer un placeholder pour l'histogramme
 placeholder = st.empty()
 
@@ -172,8 +178,29 @@ while True:
     # Afficher le graphique dans le placeholder Streamlit
     alert_placeholder.pyplot(fig)
 
-    # Attendre une seconde avant la prochaine mise à jour
-    time.sleep(TIME_INTERVAL)
+    # Affichage et gestion des boutons Alert et Non Alert avec clés uniques
+    alert_button = st.button("Alert", key="alert_button")
+    no_alert_button = st.button("Non Alert", key="no_alert_button")
+    
+    if alert_button or no_alert_button:
+        if not os.path.isfile(csv_file_path):
+            # If the CSV file doesn't exist, create it with the DataFrame
+            new_user_alert_record = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Température': [count_above_threshold], 'Alerte': ['Oui' if alert_button else 'Non']})
+            new_user_alert_record.to_csv(csv_file_path, index=False)
+
+        new_user_alert_record = pd.DataFrame({'Date': [pd.Timestamp.now()], 'Température': [count_above_threshold], 'Alerte': ['Oui' if alert_button else 'Non']})
+        # Append new_user_alert_record to the existing DataFrame if it exists
+        if os.path.isfile(csv_file_path):
+            existing_df = pd.read_csv(csv_file_path)
+            updated_df = pd.concat([existing_df, new_user_alert_record], ignore_index=True)
+            updated_df.to_csv(csv_file_path, index=False)
+        else:
+            # If the CSV file doesn't exist, create it with new_user_alert_record
+            new_user_alert_record.to_csv(csv_file_path, index=False)
+    
+        # Display the updated DataFrame in Streamlit
+        df_test=pd.read_csv(csv_file_path)
+        st.write(df_test)
     
     # Nettoyage pour éviter la surcharge de la page
     #placeholder.empty()
